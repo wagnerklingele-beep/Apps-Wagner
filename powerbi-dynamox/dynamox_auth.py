@@ -14,7 +14,7 @@ from cryptography.hazmat.backends import default_backend
 
 
 CONFIG_PATH = Path(__file__).parent / "dynamox_config.json"
-BASE_URL = "https://api.dynamox.net"
+BASE_URL = "https://api.dynamox.solutions"
 
 
 def load_config() -> dict:

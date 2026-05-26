@@ -23,7 +23,7 @@ from cryptography.hazmat.primitives import serialization
 
 # ── Configuração ─────────────────────────────────────────────────────────────
 CONFIG_PATH = Path(r"C:\PowerBI\Dynamox\dynamox_config.json")  # ajuste o caminho
-BASE_URL = "https://api.dynamox.net"
+BASE_URL = "https://api.dynamox.solutions"
 # ─────────────────────────────────────────────────────────────────────────────
 
 

@@ -29,7 +29,7 @@ from flask import Flask, Response, jsonify, request
 app = Flask(__name__)
 
 CONFIG_PATH = Path(__file__).parent / "dynamox_config.json"
-BASE_URL = "https://api.dynamox.net"
+BASE_URL = "https://api.dynamox.solutions"
 
 _token_cache: dict = {"token": None, "exp": 0}
 
