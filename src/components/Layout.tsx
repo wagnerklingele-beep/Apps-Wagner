@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import {
   LayoutDashboard, Users, UserCheck, BookOpen, ClipboardCheck,
-  Wallet, Menu, X, Church
+  Wallet, Menu, X, Church, Tag
 } from 'lucide-react';
 
 const nav = [
@@ -12,6 +12,7 @@ const nav = [
   { to: '/catequistas', label: 'Catequistas', icon: UserCheck },
   { to: '/presenca', label: 'Presença', icon: ClipboardCheck },
   { to: '/caixa', label: 'Fluxo de Caixa', icon: Wallet },
+  { to: '/equipamentos', label: 'Equipamentos', icon: Tag },
 ];
 
 export default function Layout() {

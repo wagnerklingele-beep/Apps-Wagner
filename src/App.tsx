@@ -6,6 +6,7 @@ import Catequizandos from './pages/Catequizandos';
 import Catequistas from './pages/Catequistas';
 import Presenca from './pages/Presenca';
 import FluxoCaixa from './pages/FluxoCaixa';
+import Equipamentos from './pages/Equipamentos';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="catequistas" element={<Catequistas />} />
           <Route path="presenca" element={<Presenca />} />
           <Route path="caixa" element={<FluxoCaixa />} />
+          <Route path="equipamentos" element={<Equipamentos />} />
         </Route>
       </Routes>
     </BrowserRouter>
