@@ -3,19 +3,22 @@ import { Users, UserCheck, BookOpen, ClipboardCheck, Wallet, TrendingUp, Trendin
 import { useCatequizandos, useCatequistas, useTurmas, usePresencas, useLancamentos } from '../store/useStore';
 
 function StatCard({
-  title, value, icon: Icon, color, to
+  title, value, icon: Icon, color, barColor, to
 }: {
   title: string; value: number | string; icon: React.ElementType;
-  color: string; to: string;
+  color: string; barColor: string; to: string;
 }) {
   return (
-    <Link to={to} className={`bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex items-center gap-4`}>
-      <div className={`p-3 rounded-lg ${color}`}>
-        <Icon className="w-6 h-6 text-white" />
-      </div>
-      <div>
-        <p className="text-2xl font-bold text-gray-800">{value}</p>
-        <p className="text-sm text-gray-500">{title}</p>
+    <Link to={to} className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all hover:-translate-y-0.5 overflow-hidden flex flex-col">
+      <div className={`h-1.5 w-full ${barColor}`} />
+      <div className="p-5 flex items-center gap-4">
+        <div className={`p-3 rounded-xl ${color}`}>
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <div>
+          <p className="text-2xl font-bold text-gray-800 leading-tight">{value}</p>
+          <p className="text-xs text-gray-500 font-medium mt-0.5">{title}</p>
+        </div>
       </div>
     </Link>
   );
@@ -58,11 +61,11 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <StatCard title="Catequizandos" value={catequizandos.length} icon={Users} color="bg-blue-500" to="/catequizandos" />
-        <StatCard title="Catequistas" value={catequistas.length} icon={UserCheck} color="bg-purple-500" to="/catequistas" />
-        <StatCard title="Turmas" value={turmas.length} icon={BookOpen} color="bg-green-500" to="/turmas" />
-        <StatCard title="Presenças Hoje" value={presencasHoje.length} icon={ClipboardCheck} color="bg-orange-500" to="/presenca" />
-        <StatCard title="Saldo" value={fmt(saldo)} icon={Wallet} color={saldo >= 0 ? 'bg-emerald-500' : 'bg-red-500'} to="/caixa" />
+        <StatCard title="Catequizandos" value={catequizandos.length} icon={Users} color="bg-blue-500" barColor="bg-blue-400" to="/catequizandos" />
+        <StatCard title="Catequistas" value={catequistas.length} icon={UserCheck} color="bg-purple-500" barColor="bg-purple-400" to="/catequistas" />
+        <StatCard title="Turmas" value={turmas.length} icon={BookOpen} color="bg-green-500" barColor="bg-green-400" to="/turmas" />
+        <StatCard title="Presenças Hoje" value={presencasHoje.length} icon={ClipboardCheck} color="bg-orange-500" barColor="bg-orange-400" to="/presenca" />
+        <StatCard title="Saldo" value={fmt(saldo)} icon={Wallet} color={saldo >= 0 ? 'bg-emerald-500' : 'bg-red-500'} barColor={saldo >= 0 ? 'bg-emerald-400' : 'bg-red-400'} to="/caixa" />
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
