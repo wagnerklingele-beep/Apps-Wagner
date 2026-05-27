@@ -10,13 +10,48 @@ echo.
 :: Verifica se Python está instalado
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo [ERRO] Python nao encontrado!
+    echo [!] Python nao encontrado. Tentando instalar automaticamente...
     echo.
-    echo Instale o Python em: https://www.python.org/downloads/
-    echo Marque a opcao "Add Python to PATH" durante a instalacao.
-    echo.
-    pause
-    exit /b 1
+
+    :: Tenta instalar via winget (disponivel no Windows 10/11)
+    winget --version >nul 2>&1
+    if errorlevel 1 (
+        echo [ERRO] Winget nao disponivel neste Windows.
+        echo.
+        echo Instale o Python manualmente:
+        echo   1. Acesse: https://www.python.org/downloads/
+        echo   2. Clique em "Download Python"
+        echo   3. Execute o instalador
+        echo   4. IMPORTANTE: marque "Add Python to PATH"
+        echo   5. Apos instalar, execute este arquivo novamente.
+        echo.
+        pause
+        exit /b 1
+    )
+
+    echo Instalando Python via winget...
+    winget install --id Python.Python.3.12 --source winget --silent --accept-package-agreements --accept-source-agreements
+    if errorlevel 1 (
+        echo [ERRO] Falha ao instalar Python automaticamente.
+        echo.
+        echo Instale manualmente em: https://www.python.org/downloads/
+        echo Marque a opcao "Add Python to PATH" durante a instalacao.
+        echo.
+        pause
+        exit /b 1
+    )
+
+    :: Recarrega o PATH para reconhecer o Python recem instalado
+    call refreshenv >nul 2>&1
+    python --version >nul 2>&1
+    if errorlevel 1 (
+        echo.
+        echo [!] Python instalado. Feche e abra este arquivo novamente para continuar.
+        echo     (o terminal precisa ser reiniciado para reconhecer o Python)
+        echo.
+        pause
+        exit /b 0
+    )
 )
 
 echo [OK] Python encontrado.
