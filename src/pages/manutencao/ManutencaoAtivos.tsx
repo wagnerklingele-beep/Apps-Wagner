@@ -44,7 +44,7 @@ function ComponentRow({ comp }: { comp: Component }) {
   return (
     <tr className="border-b border-gray-50 hover:bg-gray-50/60 transition-colors">
       <td className="px-3 py-2 text-xs text-gray-500 font-mono">{comp.seq}</td>
-      <td className="px-3 py-2 text-xs font-mono text-blue-700">{comp.code}</td>
+      <td className="px-3 py-2 text-xs font-mono text-brand-700">{comp.code}</td>
       <td className="px-3 py-2 text-sm text-gray-800">{comp.description}</td>
       <td className="px-3 py-2 text-xs text-center text-gray-700">
         {comp.quantity} {comp.unit}
@@ -89,7 +89,7 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">
               {m.id}
             </div>
             <div>
@@ -102,17 +102,17 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
           </button>
         </div>
         <div className="p-4 grid grid-cols-3 gap-3">
-          <div className="bg-blue-50 rounded-xl p-3 text-center">
-            <p className="text-2xl font-bold text-blue-700">{totalTags}</p>
-            <p className="text-xs text-blue-600 mt-0.5">TAGs</p>
+          <div className="bg-brand-50 rounded-xl p-3 text-center">
+            <p className="text-2xl font-bold text-brand-700">{totalTags}</p>
+            <p className="text-xs text-brand-600 mt-0.5">TAGs</p>
           </div>
-          <div className="bg-indigo-50 rounded-xl p-3 text-center">
-            <p className="text-2xl font-bold text-indigo-700">{totalEquips}</p>
-            <p className="text-xs text-indigo-600 mt-0.5">Equipamentos</p>
+          <div className="bg-brand-50 rounded-xl p-3 text-center">
+            <p className="text-2xl font-bold text-brand-700">{totalEquips}</p>
+            <p className="text-xs text-brand-600 mt-0.5">Equipamentos</p>
           </div>
-          <div className="bg-teal-50 rounded-xl p-3 text-center">
-            <p className="text-2xl font-bold text-teal-700">{totalComps}</p>
-            <p className="text-xs text-teal-600 mt-0.5">Componentes</p>
+          <div className="bg-brand-50 rounded-xl p-3 text-center">
+            <p className="text-2xl font-bold text-brand-700">{totalComps}</p>
+            <p className="text-xs text-brand-600 mt-0.5">Componentes</p>
           </div>
         </div>
         <div className="px-4 pb-4 flex-1 overflow-y-auto">
@@ -140,8 +140,8 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
-              <Tag className="w-4 h-4 text-indigo-600" />
+            <div className="w-8 h-8 rounded-lg bg-brand-100 flex items-center justify-center">
+              <Tag className="w-4 h-4 text-brand-600" />
             </div>
             <div>
               <p className="font-semibold text-gray-900 leading-tight">{t.id}</p>
@@ -153,13 +153,13 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
           </button>
         </div>
         <div className="p-4 grid grid-cols-2 gap-3">
-          <div className="bg-indigo-50 rounded-xl p-3 text-center">
-            <p className="text-2xl font-bold text-indigo-700">{t.equipments.length}</p>
-            <p className="text-xs text-indigo-600 mt-0.5">Equipamentos</p>
+          <div className="bg-brand-50 rounded-xl p-3 text-center">
+            <p className="text-2xl font-bold text-brand-700">{t.equipments.length}</p>
+            <p className="text-xs text-brand-600 mt-0.5">Equipamentos</p>
           </div>
-          <div className="bg-teal-50 rounded-xl p-3 text-center">
-            <p className="text-2xl font-bold text-teal-700">{totalComps}</p>
-            <p className="text-xs text-teal-600 mt-0.5">Componentes</p>
+          <div className="bg-brand-50 rounded-xl p-3 text-center">
+            <p className="text-2xl font-bold text-brand-700">{totalComps}</p>
+            <p className="text-xs text-brand-600 mt-0.5">Componentes</p>
           </div>
         </div>
         <div className="px-4 pb-4 flex-1 overflow-y-auto">
@@ -200,8 +200,8 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between p-4 border-b border-gray-100">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="w-8 h-8 shrink-0 rounded-lg bg-teal-100 flex items-center justify-center">
-            <Settings className="w-4 h-4 text-teal-600" />
+          <div className="w-8 h-8 shrink-0 rounded-lg bg-brand-100 flex items-center justify-center">
+            <Settings className="w-4 h-4 text-brand-600" />
           </div>
           <div className="min-w-0">
             <p className="font-semibold text-gray-900 leading-tight truncate">{e.id}</p>
@@ -252,7 +252,7 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
                 placeholder="Buscar componente..."
                 value={compSearch}
                 onChange={e => setCompSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-300"
               />
             </div>
           </div>
@@ -345,17 +345,17 @@ function TreeNodeMacro({
           onSelectMacro(macro);
         }}
         className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-left transition-colors
-          ${selectedId === `macro-${macro.id}` ? 'bg-blue-600 text-white' : 'hover:bg-gray-100 text-gray-800'}`}
+          ${selectedId === `macro-${macro.id}` ? 'bg-brand-600 text-white' : 'hover:bg-gray-100 text-gray-800'}`}
       >
         <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 font-bold text-xs
-          ${selectedId === `macro-${macro.id}` ? 'bg-blue-500' : 'bg-blue-100 text-blue-700'}`}>
+          ${selectedId === `macro-${macro.id}` ? 'bg-brand-500' : 'bg-brand-100 text-brand-700'}`}>
           {macro.id}
         </div>
         <div className="flex-1 min-w-0">
           <p className={`text-sm font-semibold truncate ${selectedId === `macro-${macro.id}` ? 'text-white' : ''}`}>
             {macro.description}
           </p>
-          <p className={`text-xs ${selectedId === `macro-${macro.id}` ? 'text-blue-200' : 'text-gray-400'}`}>
+          <p className={`text-xs ${selectedId === `macro-${macro.id}` ? 'text-brand-200' : 'text-gray-400'}`}>
             {macro.tags.length} TAGs · {totalEquips} equip.
           </p>
         </div>
@@ -365,7 +365,7 @@ function TreeNodeMacro({
       </button>
 
       {isExpanded && (
-        <div className="ml-4 pl-3 border-l-2 border-blue-100 mt-1 space-y-0.5">
+        <div className="ml-4 pl-3 border-l-2 border-brand-100 mt-1 space-y-0.5">
           {visibleTags.map(tag => (
             <TreeNodeTag
               key={tag.id}
@@ -430,18 +430,18 @@ function TreeNodeTag({
           onSelectTag(tag, macro);
         }}
         className={`w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-left transition-colors
-          ${isSelected ? 'bg-indigo-500 text-white' : 'hover:bg-gray-100 text-gray-700'}`}
+          ${isSelected ? 'bg-brand-500 text-white' : 'hover:bg-gray-100 text-gray-700'}`}
       >
-        <Tag className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-indigo-200' : 'text-indigo-400'}`} />
+        <Tag className={`w-3.5 h-3.5 shrink-0 ${isSelected ? 'text-brand-200' : 'text-brand-400'}`} />
         <div className="flex-1 min-w-0">
           <p className={`text-xs font-semibold font-mono truncate ${isSelected ? 'text-white' : 'text-gray-700'}`}>
             {tag.id}
           </p>
-          <p className={`text-xs truncate ${isSelected ? 'text-indigo-200' : 'text-gray-400'}`}>
+          <p className={`text-xs truncate ${isSelected ? 'text-brand-200' : 'text-gray-400'}`}>
             {tag.description}
           </p>
         </div>
-        <span className={`text-xs shrink-0 ${isSelected ? 'text-indigo-200' : 'text-gray-400'}`}>
+        <span className={`text-xs shrink-0 ${isSelected ? 'text-brand-200' : 'text-gray-400'}`}>
           {tag.equipments.length}
         </span>
         {isExpanded
@@ -450,7 +450,7 @@ function TreeNodeTag({
       </button>
 
       {isExpanded && (
-        <div className="ml-3 pl-3 border-l-2 border-indigo-100 mt-0.5 space-y-0.5">
+        <div className="ml-3 pl-3 border-l-2 border-brand-100 mt-0.5 space-y-0.5">
           {visibleEquips.map(equip => (
             <TreeNodeEquip
               key={equip.id}
@@ -499,19 +499,19 @@ function TreeNodeEquip({ equip, tag, macro, searchTerm, selectedId, onSelectEqui
     <button
       onClick={() => onSelectEquip(equip, tag, macro)}
       className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-colors
-        ${isSelected ? 'bg-teal-500 text-white' : 'hover:bg-gray-100 text-gray-700'}`}
+        ${isSelected ? 'bg-brand-500 text-white' : 'hover:bg-gray-100 text-gray-700'}`}
     >
       <div className={`w-2 h-2 rounded-full shrink-0 ${dotClass}`} />
       <div className="flex-1 min-w-0">
         <p className={`text-xs font-mono font-semibold truncate ${isSelected ? 'text-white' : 'text-gray-700'}`}>
           {equip.id}
         </p>
-        <p className={`text-xs truncate ${isSelected ? 'text-teal-200' : 'text-gray-400'}`}>
+        <p className={`text-xs truncate ${isSelected ? 'text-brand-200' : 'text-gray-400'}`}>
           {equip.description}
         </p>
       </div>
       {equip.components.length > 0 && (
-        <span className={`text-xs shrink-0 ${isSelected ? 'text-teal-200' : 'text-gray-400'}`}>
+        <span className={`text-xs shrink-0 ${isSelected ? 'text-brand-200' : 'text-gray-400'}`}>
           {equip.components.length}
         </span>
       )}
@@ -617,7 +617,7 @@ export default function ManutencaoAtivos() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 text-blue-400 animate-spin mb-3" />
+        <Loader2 className="w-8 h-8 text-brand-500 animate-spin mb-3" />
         <p className="text-gray-500 text-sm">Carregando árvore de ativos...</p>
       </div>
     );
@@ -660,7 +660,7 @@ export default function ManutencaoAtivos() {
                 placeholder="Buscar TAG, equipamento, componente..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full pl-9 pr-8 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-300"
               />
               {search && (
                 <button

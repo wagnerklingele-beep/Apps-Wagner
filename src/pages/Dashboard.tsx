@@ -58,7 +58,7 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <StatCard title="Catequizandos" value={catequizandos.length} icon={Users} color="bg-blue-500" to="/catequizandos" />
+        <StatCard title="Catequizandos" value={catequizandos.length} icon={Users} color="bg-brand-500" to="/catequizandos" />
         <StatCard title="Catequistas" value={catequistas.length} icon={UserCheck} color="bg-purple-500" to="/catequistas" />
         <StatCard title="Turmas" value={turmas.length} icon={BookOpen} color="bg-green-500" to="/turmas" />
         <StatCard title="Presenças Hoje" value={presencasHoje.length} icon={ClipboardCheck} color="bg-orange-500" to="/presenca" />

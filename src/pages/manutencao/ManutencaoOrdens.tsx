@@ -10,7 +10,7 @@ import { PriorityBadge } from './ManutencaoDashboard';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   'Finalizada':   { label: 'Finalizada',   color: 'text-green-700',  bg: 'bg-green-100' },
-  'Liberada':     { label: 'Liberada',     color: 'text-blue-700',   bg: 'bg-blue-100' },
+  'Liberada':     { label: 'Liberada',     color: 'text-brand-700',   bg: 'bg-brand-100' },
   'Iniciada':     { label: 'Iniciada',     color: 'text-yellow-700', bg: 'bg-yellow-100' },
   'Não Iniciada': { label: 'Não Iniciada', color: 'text-gray-600',   bg: 'bg-gray-100' },
   'Terminada':    { label: 'Terminada',    color: 'text-purple-700', bg: 'bg-purple-100' },
@@ -136,7 +136,7 @@ export default function ManutencaoOrdens() {
           <div className="relative flex-1 min-w-48">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
-              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-300"
               placeholder="Pesquisar ordem, equip., responsável..."
               value={search}
               onChange={e => { setSearch(e.target.value); setPage(1); }}
@@ -177,7 +177,7 @@ export default function ManutencaoOrdens() {
         <div className="text-xs text-gray-500">
           {filtered.length.toLocaleString('pt-BR')} de {orders.length.toLocaleString('pt-BR')} ordens
           {filtered.length !== orders.length && (
-            <span className="ml-1 text-blue-600">(filtrado)</span>
+            <span className="ml-1 text-brand-600">(filtrado)</span>
           )}
         </div>
 
@@ -204,7 +204,7 @@ export default function ManutencaoOrdens() {
                     <tr
                       key={o.id}
                       onClick={() => setSelectedId(o.id)}
-                      className={`cursor-pointer transition-colors hover:bg-blue-50/50 ${selectedId === o.id ? 'bg-blue-50' : ''}`}
+                      className={`cursor-pointer transition-colors hover:bg-brand-50/50 ${selectedId === o.id ? 'bg-brand-50' : ''}`}
                     >
                       <td className="px-4 py-2.5 font-mono text-xs text-gray-500 whitespace-nowrap">{o.id}</td>
                       <td className="px-4 py-2.5 text-gray-500 whitespace-nowrap">{o.date}</td>
@@ -227,7 +227,7 @@ export default function ManutencaoOrdens() {
                           <div className="flex items-center gap-1.5">
                             <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                               <div
-                                className={`h-full rounded-full ${pct === 100 ? 'bg-green-400' : 'bg-blue-400'}`}
+                                className={`h-full rounded-full ${pct === 100 ? 'bg-green-400' : 'bg-brand-400'}`}
                                 style={{ width: `${pct}%` }}
                               />
                             </div>
@@ -263,7 +263,7 @@ export default function ManutencaoOrdens() {
                   <button
                     key={p}
                     onClick={() => setPage(p)}
-                    className={`w-7 h-7 text-xs rounded ${safePage === p ? 'bg-blue-600 text-white' : 'hover:bg-gray-200 text-gray-600'}`}
+                    className={`w-7 h-7 text-xs rounded ${safePage === p ? 'bg-brand-600 text-white' : 'hover:bg-gray-200 text-gray-600'}`}
                   >
                     {p}
                   </button>
@@ -308,7 +308,7 @@ function SortTh({
       <span className="flex items-center gap-1">
         {label}
         {sort.key === col
-          ? sort.asc ? <ChevronUp className="w-3 h-3 text-blue-500" /> : <ChevronDown className="w-3 h-3 text-blue-500" />
+          ? sort.asc ? <ChevronUp className="w-3 h-3 text-brand-500" /> : <ChevronDown className="w-3 h-3 text-brand-500" />
           : <ChevronDown className="w-3 h-3 opacity-30" />}
       </span>
     </th>
@@ -324,7 +324,7 @@ function Select({
     <div>
       <label className="block text-xs text-gray-500 mb-0.5">{label}</label>
       <select
-        className="text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-300 bg-white"
+        className="text-sm border border-gray-200 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand-300 bg-white"
         value={value}
         onChange={e => onChange(e.target.value)}
       >
@@ -389,7 +389,7 @@ function OrderDetail({ order, onClose }: { order: MaintenanceOrder; onClose: () 
             </div>
             <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full ${pct === 100 ? 'bg-green-400' : 'bg-blue-400'}`}
+                className={`h-full rounded-full ${pct === 100 ? 'bg-green-400' : 'bg-brand-400'}`}
                 style={{ width: `${pct}%` }}
               />
             </div>
@@ -464,7 +464,7 @@ function TaskCard({
               <span className="ml-auto text-xs text-green-600 font-medium">100%</span>
             )}
             {!task.closed && task.conclusionPct > 0 && (
-              <span className="ml-auto text-xs text-blue-600 font-medium">{task.conclusionPct.toFixed(0)}%</span>
+              <span className="ml-auto text-xs text-brand-600 font-medium">{task.conclusionPct.toFixed(0)}%</span>
             )}
           </div>
           <p className="text-sm text-gray-800 truncate mt-0.5">{task.description}</p>

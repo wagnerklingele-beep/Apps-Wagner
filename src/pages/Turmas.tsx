@@ -58,7 +58,7 @@ export default function Turmas() {
           <h1 className="text-2xl font-bold text-gray-800">Turmas</h1>
           <p className="text-gray-500 text-sm mt-0.5">{turmas.length} turma(s) cadastrada(s)</p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 text-sm font-medium">
+        <button onClick={openNew} className="flex items-center gap-2 bg-brand-700 text-white px-4 py-2 rounded-lg hover:bg-brand-800 text-sm font-medium">
           <Plus className="w-4 h-4" /> Nova Turma
         </button>
       </div>
@@ -67,7 +67,7 @@ export default function Turmas() {
         <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-100">
           <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500">Nenhuma turma cadastrada.</p>
-          <button onClick={openNew} className="mt-4 text-blue-600 text-sm hover:underline">Criar primeira turma</button>
+          <button onClick={openNew} className="mt-4 text-brand-600 text-sm hover:underline">Criar primeira turma</button>
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -79,10 +79,10 @@ export default function Turmas() {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="font-semibold text-gray-800">{t.nome}</h3>
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">{t.nivel}</span>
+                    <span className="text-xs bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full">{t.nivel}</span>
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => openEdit(t)} className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded">
+                    <button onClick={() => openEdit(t)} className="p-1.5 text-gray-400 hover:text-brand-600 hover:bg-brand-50 rounded">
                       <Pencil className="w-4 h-4" />
                     </button>
                     <button onClick={() => setConfirmId(t.id)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded">
@@ -111,17 +111,17 @@ export default function Turmas() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nome da Turma *</label>
-              <input required value={form.nome} onChange={set('nome')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input required value={form.nome} onChange={set('nome')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nível *</label>
-              <select required value={form.nivel} onChange={set('nivel')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <select required value={form.nivel} onChange={set('nivel')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                 {NIVEIS.map(n => <option key={n} value={n}>{n}</option>)}
               </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Catequista</label>
-              <select value={form.catequistaId} onChange={set('catequistaId')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <select value={form.catequistaId} onChange={set('catequistaId')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
                 <option value="">— Selecione —</option>
                 {catequistas.map(c => <option key={c.id} value={c.id}>{c.nome}</option>)}
               </select>
@@ -129,20 +129,20 @@ export default function Turmas() {
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Horário</label>
-                <input value={form.horario} onChange={set('horario')} placeholder="Ex: Sábado 09h" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input value={form.horario} onChange={set('horario')} placeholder="Ex: Sábado 09h" className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Sala</label>
-                <input value={form.sala} onChange={set('sala')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input value={form.sala} onChange={set('sala')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Ano Letivo *</label>
-              <input required value={form.anoLetivo} onChange={set('anoLetivo')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              <input required value={form.anoLetivo} onChange={set('anoLetivo')} className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
             </div>
             <div className="flex gap-3 pt-2">
               <button type="button" onClick={() => setModalOpen(false)} className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancelar</button>
-              <button type="submit" className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-lg hover:bg-blue-800">Salvar</button>
+              <button type="submit" className="flex-1 px-4 py-2 text-sm font-medium text-white bg-brand-700 rounded-lg hover:bg-brand-800">Salvar</button>
             </div>
           </form>
         </Modal>

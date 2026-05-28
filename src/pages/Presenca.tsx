@@ -120,7 +120,7 @@ export default function Presenca() {
               <select
                 value={turmaSel}
                 onChange={e => handleTurmaChange(e.target.value)}
-                className="w-full appearance-none border border-gray-300 rounded-lg px-3 py-2 text-sm pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full appearance-none border border-gray-300 rounded-lg px-3 py-2 text-sm pr-8 focus:outline-none focus:ring-2 focus:ring-brand-500"
               >
                 <option value="">— Selecione uma turma —</option>
                 {turmas.map(t => <option key={t.id} value={t.id}>{t.nome}</option>)}
@@ -134,7 +134,7 @@ export default function Presenca() {
               type="date"
               value={data}
               onChange={e => handleDataChange(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
           </div>
         </div>
@@ -181,7 +181,7 @@ export default function Presenca() {
                         setJustificativas(p => ({ ...p, [c.id]: e.target.value }));
                       }}
                       placeholder="Justificativa (opcional)"
-                      className="text-xs border border-gray-200 rounded px-2 py-1 w-40 focus:outline-none focus:ring-1 focus:ring-blue-400"
+                      className="text-xs border border-gray-200 rounded px-2 py-1 w-40 focus:outline-none focus:ring-1 focus:ring-brand-400"
                     />
                   )}
                 </div>
@@ -191,7 +191,7 @@ export default function Presenca() {
             <button
               onClick={handleSalvar}
               className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium transition-colors
-                ${saved ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-blue-700 text-white hover:bg-blue-800'}`}
+                ${saved ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-brand-700 text-white hover:bg-brand-800'}`}
             >
               {saved ? <><CheckCircle2 className="w-4 h-4" /> Presença salva!</> : <><Save className="w-4 h-4" /> Salvar Presença</>}
             </button>

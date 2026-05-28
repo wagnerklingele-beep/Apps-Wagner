@@ -8,7 +8,7 @@ import { useManutencao } from '../../context/ManutencaoContext';
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; ring: string }> = {
   'Finalizada':    { label: 'Finalizada',    color: 'text-green-700',  bg: 'bg-green-100',  ring: 'bg-green-500' },
-  'Liberada':      { label: 'Liberada',      color: 'text-blue-700',   bg: 'bg-blue-100',   ring: 'bg-blue-500' },
+  'Liberada':      { label: 'Liberada',      color: 'text-brand-700',   bg: 'bg-brand-100',   ring: 'bg-brand-500' },
   'Iniciada':      { label: 'Iniciada',      color: 'text-yellow-700', bg: 'bg-yellow-100', ring: 'bg-yellow-500' },
   'Não Iniciada':  { label: 'Não Iniciada',  color: 'text-gray-600',   bg: 'bg-gray-100',   ring: 'bg-gray-400' },
   'Terminada':     { label: 'Terminada',     color: 'text-purple-700', bg: 'bg-purple-100', ring: 'bg-purple-500' },
@@ -64,7 +64,7 @@ export default function ManutencaoDashboard() {
     return (
       <div className="max-w-2xl mx-auto py-16 px-4">
         <div className="text-center mb-8">
-          <Wrench className="w-12 h-12 text-blue-400 mx-auto mb-3" />
+          <Wrench className="w-12 h-12 text-brand-500 mx-auto mb-3" />
           <h1 className="text-2xl font-bold text-gray-800">Gestão de Manutenção</h1>
           <p className="text-gray-500 mt-1">Importe o relatório MI0402 do DATASUL para visualizar as ordens</p>
         </div>
@@ -77,12 +77,12 @@ export default function ManutencaoDashboard() {
         )}
 
         <div
-          className="border-2 border-dashed border-blue-200 rounded-2xl p-12 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 transition-all"
+          className="border-2 border-dashed border-brand-200 rounded-2xl p-12 text-center cursor-pointer hover:border-brand-400 hover:bg-brand-50/40 transition-all"
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           onClick={() => inputRef.current?.click()}
         >
-          <Upload className="w-10 h-10 text-blue-300 mx-auto mb-3" />
+          <Upload className="w-10 h-10 text-brand-300 mx-auto mb-3" />
           <p className="font-semibold text-gray-700 mb-1">Arraste o arquivo aqui ou clique para selecionar</p>
           <p className="text-sm text-gray-400">Arquivo MI0402 (.tmp, .txt) exportado do DATASUL</p>
         </div>
@@ -94,7 +94,7 @@ export default function ManutencaoDashboard() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-24">
-        <RefreshCw className="w-8 h-8 text-blue-400 animate-spin mb-3" />
+        <RefreshCw className="w-8 h-8 text-brand-500 animate-spin mb-3" />
         <p className="text-gray-500">Processando arquivo, aguarde...</p>
       </div>
     );
@@ -162,7 +162,7 @@ export default function ManutencaoDashboard() {
         <div className="flex gap-2">
           <button
             onClick={() => navigate('/manutencao/ordens')}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
+            className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg text-sm font-medium hover:bg-brand-700"
           >
             <BarChart2 className="w-4 h-4" />
             Ver todas as ordens
@@ -181,10 +181,10 @@ export default function ManutencaoDashboard() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          icon={<BarChart2 className="w-5 h-5 text-blue-500" />}
+          icon={<BarChart2 className="w-5 h-5 text-brand-500" />}
           label="Total de Ordens"
           value={total.toLocaleString('pt-BR')}
-          bg="bg-blue-50"
+          bg="bg-brand-50"
         />
         <StatCard
           icon={<CheckCircle2 className="w-5 h-5 text-green-500" />}
@@ -212,17 +212,17 @@ export default function ManutencaoDashboard() {
       {/* Secondary stats */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard
-          icon={<TrendingUp className="w-5 h-5 text-indigo-500" />}
+          icon={<TrendingUp className="w-5 h-5 text-brand-500" />}
           label="Horas reportadas"
           value={totalHours.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}
-          bg="bg-indigo-50"
+          bg="bg-brand-50"
         />
         <StatCard
-          icon={<CheckCircle2 className="w-5 h-5 text-teal-500" />}
+          icon={<CheckCircle2 className="w-5 h-5 text-brand-500" />}
           label="Tarefas concluídas"
           value={`${closedTasks} / ${allTasks}`}
           sub={allTasks ? `${((closedTasks / allTasks) * 100).toFixed(1)}%` : undefined}
-          bg="bg-teal-50"
+          bg="bg-brand-50"
         />
         <StatCard
           icon={<Users className="w-5 h-5 text-orange-500" />}
@@ -265,7 +265,7 @@ export default function ManutencaoDashboard() {
           <BarChart
             data={topFamilies}
             max={topFamilies[0]?.[1] ?? 1}
-            colorClass="bg-blue-400"
+            colorClass="bg-brand-400"
           />
         </div>
 
@@ -275,7 +275,7 @@ export default function ManutencaoDashboard() {
           <BarChart
             data={topPlanners}
             max={topPlanners[0]?.[1] ?? 1}
-            colorClass="bg-indigo-400"
+            colorClass="bg-brand-400"
           />
           <div className="border-t border-gray-100 mt-4 pt-4">
             <h3 className="text-sm font-semibold text-gray-700 mb-3">Top Equipes</h3>
@@ -295,7 +295,7 @@ export default function ManutencaoDashboard() {
             <h3 className="text-sm font-semibold text-gray-700">Ordens Pendentes (prioridade)</h3>
             <button
               onClick={() => navigate('/manutencao/ordens')}
-              className="text-xs text-blue-600 hover:underline"
+              className="text-xs text-brand-600 hover:underline"
             >
               Ver todas →
             </button>
