@@ -1,9 +1,13 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Search, ChevronRight, ChevronDown, Layers, Tag, Settings,
-  Package, X, AlertCircle, Loader2, BarChart2, Wrench,
+  Package, X, AlertCircle, Loader2, BarChart2, Wrench, ClipboardPlus,
+  FileText, Clock,
 } from 'lucide-react';
 import type { AssetMacro, AssetTag, Equipment, Component } from '../../types/assets';
+import { useManutencao } from '../../context/ManutencaoContext';
+import type { MaintenanceOrder } from '../../types/manutencao';
 
 type SelectedItem =
   | { type: 'macro'; data: AssetMacro }
@@ -62,11 +66,44 @@ function ComponentRow({ comp }: { comp: Component }) {
   );
 }
 
-function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onClose: () => void }) {
+const STATUS_COLORS: Record<string, string> = {
+  'Finalizada': 'bg-green-100 text-green-700',
+  'Liberada': 'bg-brand-100 text-brand-700',
+  'Iniciada': 'bg-yellow-100 text-yellow-700',
+  'Não Iniciada': 'bg-gray-100 text-gray-600',
+  'Terminada': 'bg-purple-100 text-purple-700',
+};
+
+function OrderRow({ order }: { order: MaintenanceOrder }) {
+  const cls = STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-600';
+  return (
+    <div className="py-2 px-3 bg-gray-50 rounded-lg">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-xs font-mono font-semibold text-gray-700">{order.id}</span>
+        <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${cls}`}>{order.status}</span>
+      </div>
+      <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">{order.description}</p>
+      <div className="flex items-center gap-3 mt-1 text-xs text-gray-400">
+        <span>{order.date}</span>
+        <span>{order.team || '—'}</span>
+        {order.altMaintenance && <span className="font-mono">{order.altMaintenance}</span>}
+      </div>
+    </div>
+  );
+}
+
+function DetailPanel({ selected, onClose, orders, onNovaSolicitacao }: {
+  selected: SelectedItem | null;
+  onClose: () => void;
+  orders: MaintenanceOrder[];
+  onNovaSolicitacao: (equip: Equipment, tag: AssetTag, macro: AssetMacro) => void;
+}) {
   const [compSearch, setCompSearch] = useState('');
+  const [tab, setTab] = useState<'componentes' | 'ordens'>('componentes');
 
   useEffect(() => {
     setCompSearch('');
+    setTab('componentes');
   }, [selected]);
 
   if (!selected) {
@@ -188,6 +225,10 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
 
   // Equipment detail
   const e = selected.data;
+  const equipOrders = useMemo(
+    () => orders.filter(o => o.equipment === e.id || o.tag === selected.tag.id),
+    [orders, e.id, selected.tag.id]
+  );
   const filtered = compSearch
     ? e.components.filter(
         c =>
@@ -208,9 +249,19 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
             <p className="text-xs text-gray-400 truncate">{e.description}</p>
           </div>
         </div>
-        <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg shrink-0 ml-2">
-          <X className="w-4 h-4 text-gray-400" />
-        </button>
+        <div className="flex items-center gap-1 shrink-0 ml-2">
+          <button
+            onClick={() => onNovaSolicitacao(e, selected.tag, selected.macro)}
+            className="flex items-center gap-1 px-2 py-1 text-xs bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors"
+            title="Nova Solicitação de Serviço"
+          >
+            <ClipboardPlus className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Solicitar</span>
+          </button>
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg">
+            <X className="w-4 h-4 text-gray-400" />
+          </button>
+        </div>
       </div>
 
       <div className="px-4 pt-3 pb-2 grid grid-cols-2 gap-2 text-xs border-b border-gray-50">
@@ -242,50 +293,91 @@ function DetailPanel({ selected, onClose }: { selected: SelectedItem | null; onC
         </div>
       </div>
 
-      {e.components.length > 0 && (
+      {/* Tabs */}
+      <div className="flex border-b border-gray-100 px-4">
+        <button
+          onClick={() => setTab('componentes')}
+          className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors
+            ${tab === 'componentes' ? 'border-brand-600 text-brand-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+        >
+          <Package className="w-3.5 h-3.5" />
+          Componentes ({e.components.length})
+        </button>
+        <button
+          onClick={() => setTab('ordens')}
+          className={`flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors
+            ${tab === 'ordens' ? 'border-brand-600 text-brand-700' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+        >
+          <FileText className="w-3.5 h-3.5" />
+          Ordens ({equipOrders.length})
+          {equipOrders.filter(o => o.status === 'Liberada' || o.status === 'Iniciada').length > 0 && (
+            <span className="ml-1 px-1.5 py-0.5 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold">
+              {equipOrders.filter(o => o.status === 'Liberada' || o.status === 'Iniciada').length}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {tab === 'componentes' && (
         <>
-          <div className="px-4 py-2 border-b border-gray-100">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Buscar componente..."
-                value={compSearch}
-                onChange={e => setCompSearch(e.target.value)}
-                className="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-300"
-              />
+          {e.components.length > 0 ? (
+            <>
+              <div className="px-4 py-2 border-b border-gray-100">
+                <div className="relative">
+                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Buscar componente..."
+                    value={compSearch}
+                    onChange={e => setCompSearch(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-300"
+                  />
+                </div>
+              </div>
+              <div className="flex-1 overflow-auto">
+                <table className="w-full text-xs min-w-[500px]">
+                  <thead>
+                    <tr className="bg-gray-50 text-left sticky top-0">
+                      <th className="px-3 py-2 font-semibold text-gray-500 w-10">#</th>
+                      <th className="px-3 py-2 font-semibold text-gray-500">Código</th>
+                      <th className="px-3 py-2 font-semibold text-gray-500">Descrição</th>
+                      <th className="px-3 py-2 font-semibold text-gray-500 text-center">Qtd</th>
+                      <th className="px-3 py-2 font-semibold text-gray-500 text-center">Saldo</th>
+                      <th className="px-3 py-2 font-semibold text-gray-500">Local</th>
+                      <th className="px-3 py-2 font-semibold text-gray-500">Situação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((c, i) => (
+                      <ComponentRow key={i} comp={c} />
+                    ))}
+                  </tbody>
+                </table>
+                {filtered.length === 0 && (
+                  <p className="text-center text-xs text-gray-400 py-6">Nenhum componente encontrado</p>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
+              <Package className="w-8 h-8 mb-2 opacity-40" />
+              <p className="text-sm">Nenhum componente cadastrado</p>
             </div>
-          </div>
-          <div className="flex-1 overflow-auto">
-            <table className="w-full text-xs min-w-[500px]">
-              <thead>
-                <tr className="bg-gray-50 text-left sticky top-0">
-                  <th className="px-3 py-2 font-semibold text-gray-500 w-10">#</th>
-                  <th className="px-3 py-2 font-semibold text-gray-500">Código</th>
-                  <th className="px-3 py-2 font-semibold text-gray-500">Descrição</th>
-                  <th className="px-3 py-2 font-semibold text-gray-500 text-center">Qtd</th>
-                  <th className="px-3 py-2 font-semibold text-gray-500 text-center">Saldo</th>
-                  <th className="px-3 py-2 font-semibold text-gray-500">Local</th>
-                  <th className="px-3 py-2 font-semibold text-gray-500">Situação</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((c, i) => (
-                  <ComponentRow key={i} comp={c} />
-                ))}
-              </tbody>
-            </table>
-            {filtered.length === 0 && (
-              <p className="text-center text-xs text-gray-400 py-6">Nenhum componente encontrado</p>
-            )}
-          </div>
+          )}
         </>
       )}
 
-      {e.components.length === 0 && (
-        <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
-          <Package className="w-8 h-8 mb-2 opacity-40" />
-          <p className="text-sm">Nenhum componente cadastrado</p>
+      {tab === 'ordens' && (
+        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          {equipOrders.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 text-gray-400">
+              <Clock className="w-8 h-8 mb-2 opacity-40" />
+              <p className="text-sm">Nenhuma ordem para este equipamento</p>
+              <p className="text-xs mt-1">Importe o MI0402 para visualizar ordens</p>
+            </div>
+          ) : (
+            equipOrders.map(o => <OrderRow key={o.id} order={o} />)
+          )}
         </div>
       )}
     </div>
@@ -520,6 +612,8 @@ function TreeNodeEquip({ equip, tag, macro, searchTerm, selectedId, onSelectEqui
 }
 
 export default function ManutencaoAtivos() {
+  const { orders } = useManutencao();
+  const navigate = useNavigate();
   const [data, setData] = useState<AssetMacro[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -603,6 +697,12 @@ export default function ManutencaoAtivos() {
     setSelected(null);
     setSelectedId(null);
   }, []);
+
+  const handleNovaSolicitacao = useCallback((equip: Equipment, tag: AssetTag, macro: AssetMacro) => {
+    navigate('/manutencao/solicitacoes', {
+      state: { equipamento: equip.id, equipamentoDescricao: equip.description, tag: tag.id, tagDescricao: tag.description, macro: macro.id }
+    });
+  }, [navigate]);
 
   const stats = useMemo(() => {
     if (!data.length) return null;
@@ -693,7 +793,12 @@ export default function ManutencaoAtivos() {
 
         {/* Right: detail panel */}
         <div className="flex-1 bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-          <DetailPanel selected={selected} onClose={clearDetail} />
+          <DetailPanel
+            selected={selected}
+            onClose={clearDetail}
+            orders={orders}
+            onNovaSolicitacao={handleNovaSolicitacao}
+          />
         </div>
       </div>
     </div>
