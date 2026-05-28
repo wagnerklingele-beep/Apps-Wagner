@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import {
   LayoutDashboard, Users, UserCheck, BookOpen, ClipboardCheck,
-  Wallet, Menu, X, Church, Wrench, ClipboardList,
+  Wallet, Menu, X, Church, Wrench, ClipboardList, GitBranch,
 } from 'lucide-react';
 
 const catechesisNav = [
@@ -17,6 +17,7 @@ const catechesisNav = [
 const manutencaoNav = [
   { to: '/manutencao', label: 'Painel', icon: Wrench, exact: true },
   { to: '/manutencao/ordens', label: 'Ordens', icon: ClipboardList },
+  { to: '/manutencao/ativos', label: 'Árvore de Ativos', icon: GitBranch },
 ];
 
 function NavSection({
@@ -115,7 +116,7 @@ export default function Layout() {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col">
           <Outlet />
         </main>
       </div>

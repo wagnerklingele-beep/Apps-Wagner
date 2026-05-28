@@ -8,6 +8,7 @@ import Presenca from './pages/Presenca';
 import FluxoCaixa from './pages/FluxoCaixa';
 import ManutencaoDashboard from './pages/manutencao/ManutencaoDashboard';
 import ManutencaoOrdens from './pages/manutencao/ManutencaoOrdens';
+import ManutencaoAtivos from './pages/manutencao/ManutencaoAtivos';
 import { ManutencaoProvider } from './context/ManutencaoContext';
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="caixa" element={<FluxoCaixa />} />
             <Route path="manutencao" element={<ManutencaoDashboard />} />
             <Route path="manutencao/ordens" element={<ManutencaoOrdens />} />
+            <Route path="manutencao/ativos" element={<ManutencaoAtivos />} />
           </Route>
         </Routes>
       </ManutencaoProvider>
