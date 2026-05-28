@@ -3,6 +3,7 @@ import { NavLink, Outlet } from 'react-router-dom';
 import {
   LayoutDashboard, Users, UserCheck, BookOpen, ClipboardCheck,
   Wallet, Menu, X, Church, Wrench, ClipboardList, GitBranch,
+  ClipboardPlus, UserCheck2, Hammer,
 } from 'lucide-react';
 
 const catechesisNav = [
@@ -18,6 +19,9 @@ const manutencaoNav = [
   { to: '/manutencao', label: 'Painel', icon: Wrench, exact: true },
   { to: '/manutencao/ordens', label: 'Ordens', icon: ClipboardList },
   { to: '/manutencao/ativos', label: 'Árvore de Ativos', icon: GitBranch },
+  { to: '/manutencao/solicitacoes', label: 'Solicitações', icon: ClipboardPlus },
+  { to: '/manutencao/aprovadores', label: 'Aprovadores', icon: UserCheck2 },
+  { to: '/manutencao/ordens-internas', label: 'Ordens Internas', icon: Hammer },
 ];
 
 function NavSection({
