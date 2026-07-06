@@ -1,6 +1,5 @@
 """
-Script de diagnostico - testa varias combinacoes de autenticacao
-para encontrar o formato correto do JWT para a API Dynamox.
+Script de diagnostico v2 - testa combinacoes com kid header e diferentes headers HTTP.
 Execute: python testar_api.py
 """
 
@@ -23,103 +22,110 @@ def load_config():
         return json.load(f)
 
 
-def make_jwt(config, iss, sub, aud=None):
+def make_jwt(config, iss, sub, aud=None, kid=None):
     private_key = serialization.load_pem_private_key(
         config["privateKey"].encode(), password=None, backend=default_backend()
     )
     now = int(time.time())
-    payload = {
-        "iss": iss,
-        "sub": sub,
-        "iat": now,
-        "exp": now + 300,
-        "jti": str(uuid.uuid4()),
-    }
+    payload = {"iss": iss, "sub": sub, "iat": now, "exp": now + 300, "jti": str(uuid.uuid4())}
     if aud:
         payload["aud"] = aud
-    return jwt.encode(payload, private_key, algorithm="RS256")
+    headers = {}
+    if kid:
+        headers["kid"] = kid
+    return jwt.encode(payload, private_key, algorithm="RS256", headers=headers if headers else None)
 
 
-def test(label, token, path="/v2/machines"):
+def test(label, headers_http, path="/v2/machines"):
     try:
-        resp = requests.get(
-            BASE_URL + path,
-            headers={"Authorization": "Bearer " + token, "Content-Type": "application/json"},
-            timeout=10,
-            allow_redirects=True,
-        )
-        result = "HTTP " + str(resp.status_code)
-        if resp.status_code == 200:
-            result += " [SUCESSO!] " + resp.text[:200]
-        else:
-            result += " -> " + resp.text[:200]
+        resp = requests.get(BASE_URL + path, headers=headers_http, timeout=10)
+        status = resp.status_code
+        body = resp.text[:150]
+        ok = status == 200
+        prefix = "[OK!] " if ok else "[...] "
+        print(prefix + label)
+        print("      HTTP " + str(status) + " -> " + body)
+        print()
+        return ok
     except Exception as e:
-        result = "ERRO: " + str(e)[:100]
-    print(("[OK]  " if "SUCESSO" in result else "[...] ") + label + ": " + result)
-    print()
-    return "SUCESSO" in result
+        print("[ERR] " + label + ": " + str(e)[:100])
+        print()
+        return False
 
 
 cfg = load_config()
 app_id = cfg["applicationId"]
+key_id = cfg["_id"]
 email = cfg["email"]
 
-print("=" * 60)
-print("  Diagnostico de autenticacao Dynamox API")
-print("  Base URL: " + BASE_URL)
-print("  ApplicationId: " + app_id)
-print("  Email: " + email)
-print("=" * 60)
+print("=" * 65)
+print("  Diagnostico Dynamox API v2")
+print("  ApplicationId : " + app_id)
+print("  KeyId (_id)   : " + key_id)
+print("  Email         : " + email)
+print("=" * 65)
 print()
 
-combos = [
-    ("iss=appId, sub=email, aud=base_url",
-     make_jwt(cfg, app_id, email, BASE_URL)),
-    ("iss=appId, sub=appId, aud=base_url",
-     make_jwt(cfg, app_id, app_id, BASE_URL)),
-    ("iss=appId, sub=email, sem aud",
-     make_jwt(cfg, app_id, email, None)),
-    ("iss=email, sub=email, aud=base_url",
-     make_jwt(cfg, email, email, BASE_URL)),
-    ("iss=appId, sub=email, aud=http (sem https)",
-     make_jwt(cfg, app_id, email, "http://api.dynamox.solutions")),
-    ("iss=appId, sub=email, aud=dominio simples",
-     make_jwt(cfg, app_id, email, "api.dynamox.solutions")),
-    ("iss=appId, sub=email, aud=dynamox.solutions",
-     make_jwt(cfg, app_id, email, "dynamox.solutions")),
-    ("iss=appId, sub=appId, sem aud",
-     make_jwt(cfg, app_id, app_id, None)),
-]
-
-# Testa tambem endpoints alternativos
-paths = ["/v2/machines", "/machines", "/v1/machines", "/api/v2/machines"]
-
 found = False
-for label, token in combos:
-    if test(label, token):
-        print(">>> COMBINACAO CORRETA ENCONTRADA: " + label)
+
+# --- Bloco 1: JWT com kid=_id ---
+print("-- Bloco 1: JWT com kid = _id --")
+for iss, sub, aud, desc in [
+    (app_id, email,   BASE_URL, "iss=appId sub=email aud=url"),
+    (app_id, app_id,  BASE_URL, "iss=appId sub=appId aud=url"),
+    (app_id, email,   None,     "iss=appId sub=email sem aud"),
+    (key_id, email,   BASE_URL, "iss=keyId sub=email aud=url"),
+    (key_id, app_id,  BASE_URL, "iss=keyId sub=appId aud=url"),
+]:
+    token = make_jwt(cfg, iss, sub, aud, kid=key_id)
+    if test(desc + " kid=_id", {"Authorization": "Bearer " + token, "Content-Type": "application/json"}):
         found = True
         break
 
+# --- Bloco 2: JWT com kid=applicationId ---
 if not found:
-    print("Nenhuma combinacao padrao funcionou. Testando caminhos alternativos...")
-    print()
-    token = make_jwt(cfg, app_id, email, BASE_URL)
-    for path in paths:
-        if test("iss=appId sub=email aud=base_url path=" + path, token, path):
-            print(">>> CAMINHO CORRETO: " + path)
+    print("-- Bloco 2: JWT com kid = applicationId --")
+    for iss, sub, aud, desc in [
+        (app_id, email,  BASE_URL, "iss=appId sub=email aud=url"),
+        (app_id, email,  None,     "iss=appId sub=email sem aud"),
+        (key_id, email,  BASE_URL, "iss=keyId sub=email aud=url"),
+    ]:
+        token = make_jwt(cfg, iss, sub, aud, kid=app_id)
+        if test(desc + " kid=appId", {"Authorization": "Bearer " + token, "Content-Type": "application/json"}):
             found = True
             break
 
+# --- Bloco 3: Headers alternativos ---
 if not found:
-    print("=" * 60)
-    print("Nao foi possivel autenticar automaticamente.")
-    print("Verifique com o suporte Dynamox o formato correto do JWT")
-    print("ou se o applicationId esta habilitado para API access.")
-    print("=" * 60)
+    print("-- Bloco 3: Headers HTTP alternativos --")
+    token = make_jwt(cfg, app_id, email, BASE_URL, kid=key_id)
+    for header_name, header_value in [
+        ("X-Api-Key",       token),
+        ("X-Auth-Token",    token),
+        ("Api-Key",         token),
+        ("Authorization",   "Token " + token),
+        ("Authorization",   "JWT " + token),
+    ]:
+        if test(header_name + ": " + header_value[:30] + "...", {header_name: header_value, "Content-Type": "application/json"}):
+            found = True
+            break
+
+# --- Bloco 4: applicationId como API key ---
+if not found:
+    print("-- Bloco 4: ApplicationId como chave simples --")
+    for header_name in ["X-Api-Key", "X-Application-Id", "Authorization"]:
+        value = app_id if header_name != "Authorization" else "Bearer " + app_id
+        if test(header_name + "=" + app_id, {header_name: value, "Content-Type": "application/json"}):
+            found = True
+            break
+
+print("=" * 65)
+if found:
+    print("AUTENTICACAO FUNCIONANDO! Me mande um print desta tela.")
 else:
-    print("=" * 60)
-    print("Autenticacao funcionando! Execute iniciar_dynamox.bat")
-    print("=" * 60)
+    print("Nenhuma combinacao funcionou.")
+    print("Provavelmente a API precisa de ativacao pelo suporte Dynamox.")
+    print("Contate o suporte e pergunte: 'Como autenticar via JWT RSA na API?'")
+print("=" * 65)
 
 input("\nPressione Enter para fechar...")
