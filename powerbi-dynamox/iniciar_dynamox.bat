@@ -1,65 +1,61 @@
 @echo off
-chcp 65001 >nul
-title Dynamox → Power BI
+title Dynamox - Power BI
 
 echo ============================================
 echo   Dynamox API - Conector para Power BI
 echo ============================================
 echo.
 
-:: Verifica se Python está instalado
+:: Tenta encontrar Python no PATH
+set PYTHON=
 python --version >nul 2>&1
-if errorlevel 1 (
-    echo [!] Python nao encontrado. Tentando instalar automaticamente...
-    echo.
+if not errorlevel 1 (
+    set PYTHON=python
+    goto python_ok
+)
 
-    :: Tenta instalar via winget (disponivel no Windows 10/11)
-    winget --version >nul 2>&1
-    if errorlevel 1 (
-        echo [ERRO] Winget nao disponivel neste Windows.
-        echo.
-        echo Instale o Python manualmente:
-        echo   1. Acesse: https://www.python.org/downloads/
-        echo   2. Clique em "Download Python"
-        echo   3. Execute o instalador
-        echo   4. IMPORTANTE: marque "Add Python to PATH"
-        echo   5. Apos instalar, execute este arquivo novamente.
-        echo.
-        pause
-        exit /b 1
+py --version >nul 2>&1
+if not errorlevel 1 (
+    set PYTHON=py
+    goto python_ok
+)
+
+:: Procura Python nas pastas de instalacao comuns
+for %%V in (313 312 311 310 39 38) do (
+    if exist "%LOCALAPPDATA%\Programs\Python\Python%%V\python.exe" (
+        set PYTHON="%LOCALAPPDATA%\Programs\Python\Python%%V\python.exe"
+        goto python_ok
     )
-
-    echo Instalando Python via winget...
-    winget install --id Python.Python.3.12 --source winget --silent --accept-package-agreements --accept-source-agreements
-    if errorlevel 1 (
-        echo [ERRO] Falha ao instalar Python automaticamente.
-        echo.
-        echo Instale manualmente em: https://www.python.org/downloads/
-        echo Marque a opcao "Add Python to PATH" durante a instalacao.
-        echo.
-        pause
-        exit /b 1
+    if exist "C:\Python%%V\python.exe" (
+        set PYTHON="C:\Python%%V\python.exe"
+        goto python_ok
     )
-
-    :: Recarrega o PATH para reconhecer o Python recem instalado
-    call refreshenv >nul 2>&1
-    python --version >nul 2>&1
-    if errorlevel 1 (
-        echo.
-        echo [!] Python instalado. Feche e abra este arquivo novamente para continuar.
-        echo     (o terminal precisa ser reiniciado para reconhecer o Python)
-        echo.
-        pause
-        exit /b 0
+    if exist "C:\Program Files\Python%%V\python.exe" (
+        set PYTHON="C:\Program Files\Python%%V\python.exe"
+        goto python_ok
     )
 )
 
-echo [OK] Python encontrado.
+echo [ERRO] Python nao encontrado mesmo estando instalado.
+echo.
+echo Solucao: reinstale o Python marcando "Add Python to PATH":
+echo   1. Abra o instalador do Python novamente
+echo   2. Clique em "Modify"
+echo   3. Avance ate "Advanced Options"
+echo   4. Marque "Add Python to environment variables"
+echo   5. Clique em "Install"
+echo   6. Feche e abra este arquivo novamente
+echo.
+pause
+exit /b 1
+
+:python_ok
+echo [OK] Python encontrado: %PYTHON%
 echo.
 
-:: Instala dependências
-echo Instalando dependencias (pode demorar na primeira vez)...
-pip install PyJWT cryptography requests pandas flask --quiet
+:: Instala dependencias
+echo Instalando dependencias...
+%PYTHON% -m pip install PyJWT cryptography requests pandas flask --quiet
 if errorlevel 1 (
     echo [ERRO] Falha ao instalar dependencias.
     pause
@@ -68,9 +64,9 @@ if errorlevel 1 (
 echo [OK] Dependencias instaladas.
 echo.
 
-:: Testa a autenticação
+:: Testa autenticacao
 echo Testando autenticacao com a API Dynamox...
-python dynamox_auth.py >nul 2>&1
+%PYTHON% dynamox_auth.py >nul 2>&1
 if errorlevel 1 (
     echo [ERRO] Falha na autenticacao. Verifique o arquivo dynamox_config.json.
     pause
@@ -84,7 +80,7 @@ echo ============================================
 echo   Servidor iniciado em:
 echo   http://localhost:8765
 echo.
-echo   Use estes enderecos no Power BI (Obter Dados > Web):
+echo   Use estes enderecos no Power BI (Obter Dados - Web):
 echo   http://localhost:8765/machines
 echo   http://localhost:8765/sensors
 echo   http://localhost:8765/alerts
@@ -94,6 +90,6 @@ echo   Deixe esta janela ABERTA enquanto usar o Power BI.
 echo   Para encerrar, feche esta janela ou pressione Ctrl+C.
 echo ============================================
 echo.
-python dynamox_server.py
+%PYTHON% dynamox_server.py
 
 pause
